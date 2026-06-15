@@ -76,11 +76,28 @@ Surprise: The model correctly identified that a file missing a date suffix would
 
 #### From the materials
 
-<!-- ReAct / Karpathy Software 3.0 notes; trap-exercise discussion questions -->
+- **Andrej Karpathy: Software Is Changing (Again)** — Software 3.0 represents a paradigm shift where programmers act more as prompt engineers and evaluators. The agent is a fast, confident, occasionally wrong intern. The primary engineering task becomes designing evaluation systems (like unit tests and biological invariants) rather than writing code manually. One thing to test is running model-generated outputs through rigorous invariant checkers.
+- **Yao et al.: ReAct: Synergizing Reasoning and Acting in Language Models** — ReAct couples reasoning (thoughts) and acting (actions/tools) dynamically. This mimics human problem-solving and reduces hallucination rates. One claim to verify is that interleaving reasoning and tool use helps agents self-correct and backtrack during execution.
+- **Anthropic: Building Effective Agents** — Building predictable, simple workflows (e.g. prompt chaining, orchestrator-worker) is usually more effective and stable than using highly autonomous agents. Start simple before escalating autonomy.
+- **Trap-exercise discussion questions:**
+  - **Looks right but isn't failures in bioinformatics:**
+    - *Strand handling:* Missing reverse complement for negative strand features, leading to translating the wrong strand.
+    - *Reference assembly version mismatch:* Coordinates mapped to GRCh37/hg19 instead of GRCh38/hg38.
+    - *Coordinate standards:* Mix-up between 0-based half-open (BED, BAM) and 1-based inclusive (GFF3, VCF).
+    - *Phred quality score encoding:* Incorrectly assuming Phred+64 instead of Phred+33 for older FASTQ formats.
+  - **Biological invariants for validation:**
+    - *CDS properties:* Codon length must be a multiple of 3, must start with ATG, and must end with a stop codon (TAA, TAG, TGA).
+    - *Splice sites:* Spliced exons should exhibit canonical GT-AG donor/acceptor splice sites at intron boundaries.
+    - *Reference allele consistency:* Reference alleles in a VCF must match the exact nucleotides in the reference FASTA at the specified position.
+  - **Scaling validation:**
+    - Write a validation script that runs programmatically over all parsed transcripts/features, checks all biological invariants automatically, and outputs a summary of failures (similar to unit testing but for biological data).
 
 #### Surprises
 
-<!-- Trap exercise, mini-project, agent moments — be specific -->
+- **2026-06-15 · Gemini 3.5 Flash (High)** — Asked the agent to write a script parsing `genome.fa` and `annotations.gff3` to extract and translate CDS sequences. The agent naively sliced the sequence using `seq[start:end]` (0-based) instead of `seq[start-1:end]`, which is required because GFF3 is 1-based inclusive. The code ran cleanly but translated junk proteins.
+  - *Takeaway:* Biological invariants (e.g., checking if the sequence starts with M, ends with *, and length is divisible by 3) are the most effective validation checks to catch silent agent coordinate bugs.
+- **2026-06-15 · Gemini 3.5 Flash (High)** — Asked the agent to build a FASTQ QC tool generating an HTML report. It built a premium interactive dashboard utilizing Chart.js and custom CSS, complete with dummy data fallback so it works without setup.
+  - *Takeaway:* LLMs excel at front-end design and boilerplate code, allowing the developer to focus on the core scientific logic.
 
 ### Week 3
 
