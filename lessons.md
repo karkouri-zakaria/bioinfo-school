@@ -50,27 +50,27 @@ Add an entry whenever an LLM or agent catches you off guard. Include enough deta
 
 #### From the materials
 
-Task: Counting characters or letters (e.g., "How many 'r's in strawberry?")
+- **Task:** Counting characters or letters (e.g., "How many 'r's in strawberry?")
 
-Why it's hard: The model doesn't see characters; it sees tokens (atoms of text). Because it isn't "looking" at the character level, it lacks a direct visual sense of the word's structure, and its internal "mental arithmetic" is prone to failing at simple counting tasks.
+- **Why it's hard:** The model doesn't see characters; it sees tokens (atoms of text). Because it isn't "looking" at the character level, it lacks a direct visual sense of the word's structure, and its internal "mental arithmetic" is prone to failing at simple counting tasks.
 
-Domain Check: Always treat string manipulation or character counts as untrustworthy. Verify by asking the model to write and execute a Python script to count them.
+- **Domain Check:** Always treat string manipulation or character counts as untrustworthy. Verify by asking the model to write and execute a Python script to count them.
 
 #### Surprises
 
 Model/Agent: Gemini 1.5 Pro
 
-Task: Sorting a list of CSV file names by date embedded in the filename (e.g., data_20260105.csv, data_20260104.csv).
+- **Task:** Sorting a list of CSV file names by date embedded in the filename (e.g., data_20260105.csv, data_20260104.csv).
 
-The Vanilla Gap: The vanilla model got the order wrong because it treated the numbers as strings in a way that ignored the actual date logic, or hallucinated a sort order based on file length rather than the date sequence.
+- **The Vanilla Gap:** The vanilla model got the order wrong because it treated the numbers as strings in a way that ignored the actual date logic, or hallucinated a sort order based on file length rather than the date sequence.
 
-The Code Execution Gap: Using code execution, the model wrote a simple Python script using datetime objects to parse the strings. It was 100% accurate because it offloaded the logic to a deterministic interpreter rather than using its "mental" statistical patterns.
+- **The Code Execution Gap:** Using code execution, the model wrote a simple Python script using datetime objects to parse the strings. It was 100% accurate because it offloaded the logic to a deterministic interpreter rather than using its "mental" statistical patterns.
 
 Scientific Validity Check:
 
-Assumption made: The model assumed the format YYYYMMDD was consistent across all files.
+- **Assumption made:** The model assumed the format YYYYMMDD was consistent across all files.
 
-Surprise: The model correctly identified that a file missing a date suffix would break the script and added an if statement to handle the error—a level of "defensive programming" I didn't explicitly prompt for, likely because it saw similar patterns in its training data for robust code.
+- **Surprise:** The model correctly identified that a file missing a date suffix would break the script and added an if statement to handle the error—a level of "defensive programming" I didn't explicitly prompt for, likely because it saw similar patterns in its training data for robust code.
 
 ### Week 2
 
@@ -111,7 +111,9 @@ Model/Agent: Antigravity Agent (Gemini 3.1 Low)
 
 #### From the materials
 
-<!-- MCP / BixBench notes -->
+- **MCP (Model Context Protocol):** Wrapping tools as typed, named interfaces lets agents call them with structured args and get structured responses — no fragile stdout parsing. The leap from "agent runs shell commands" to "agent calls structured tools" is what makes workflows composable and auditable.
+- **Three Modes Heuristic:** One-off exploration → direct commands; reusable analysis → agent-written code; production/repeated workflow → MCP. Choosing the wrong mode is where most friction comes from.
+- **BixBench (Mitchener et al., 2025):** Frontier agents hit ~17% accuracy on real computational biology tasks. Useful as calibrated tools, not autonomous bioinformaticians. The honest numbers confirm the calibration lesson from weeks 1–3: verify everything, trust selectively.
 
 #### Surprises
 
